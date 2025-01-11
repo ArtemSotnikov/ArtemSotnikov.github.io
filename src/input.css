@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: 'spacegrotesk';
+        src: url(../assets/fonts/SpaceGrotesk-Regular.ttf) format('truetype');
+    }
+}
+
+* {
+    font-family: 'spacegrotesk', sans-serif;
+}
+
+.test {
+    @apply text-white;
+}
+
+.nav-menu {
+    @apply text-white;
+}
+
+.title_gradient {
+    @apply bg-gradient-to-r from-start_grad to-end_grad bg-clip-text text-transparent;
+}
+
+.title_white {
+    @apply text-white;
+}
+
+.text_info {
+    @apply text-white;
+}
+
+.choose_button {
+    @apply px-[32px] py-[22px] rounded-lg bg-white text-black hover:bg-but_chosen hover:text-white;
+}
+
