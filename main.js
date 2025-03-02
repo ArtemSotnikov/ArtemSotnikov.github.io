@@ -7,23 +7,29 @@ const imgContainerElem = document.querySelector(".slider");
 console.log(imgContainerElem);
 const firstImageElem = document.querySelector("img");
 console.log(firstImageElem);
+//Prev and next bars
 const leftElement = document.querySelector(".prev");
 const rightElement = document.querySelector(".next");
 console.log(leftElement);
 console.log(rightElement);
 const allImages = document.querySelectorAll(".image_container");
 console.log(allImages);
+
 const slidesCount = allImages.length;
 console.log(slidesCount);
 
 // Events
+//On prev and next bars
 leftElement.addEventListener("click", onLeftClick);
 rightElement.addEventListener("click", onRightClick);
+//On left and right arrows
 document.addEventListener("keydown", onKeyPress);
+//Support mobile swipe
 imgContainerElem.addEventListener("touchstart", onTouchStart);
 imgContainerElem.addEventListener("touchend", onTouchEnd);
 
 // Listeners
+//Move to left with prev bar
 function onLeftClick() {
     currentSlide--;
 
@@ -34,6 +40,7 @@ function onLeftClick() {
     imgContainerElem.style.transform = `translate(-${currentSlide * firstImageElem.offsetWidth}px)`;
 }
 
+//Move to right with next bar
 function onRightClick() {
     currentSlide++;
 
@@ -44,6 +51,7 @@ function onRightClick() {
     imgContainerElem.style.transform = `translate(-${currentSlide * firstImageElem.offsetWidth}px)`;
 }
 
+//Check left or right key press then activate functionality of respective bars
 function onKeyPress(event) {
    // console.log(event);
 
@@ -54,27 +62,41 @@ function onKeyPress(event) {
     }
 }
 
+//"Log" start position on mobile touch.
 function onTouchStart(event) {
     console.log(event);
     startX = event.touches[0].clientX;
     console.log(startX);
 }
 
+//If swipe on mobile is long enough
+//function onTouchEnd(event) {
+//    console.log(event);
+//    let endX = event.changedTouches[0].clientX;
+//    console.log(endX);
+//
+//    let swipeThreshold = 50;
+//
+//    if (startX - endX > swipeThreshold) {
+//        onRightClick();
+//    } else if (endX - startX > swipeThreshold) {
+//        onLeftClick();
+//    }
+//}
+
 function onTouchEnd(event) {
     console.log(event);
     let endX = event.changedTouches[0].clientX;
     console.log(endX);
 
-    let swipeThreshold = 50;
+//    let swipeThreshold = 50;
 
-    if (startX - endX > swipeThreshold) {
+    if (startX > endX) {
         onRightClick();
-    } else if (endX - startX > swipeThreshold) {
+    } else if (startX < endX) {
         onLeftClick();
     }
 }
-
-
 
 
 
