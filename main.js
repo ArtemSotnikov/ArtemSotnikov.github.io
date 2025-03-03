@@ -2,7 +2,7 @@
 let currentSlide = 0;
 let startX;
 let isOngoing = false;
-const slideTime = 1;
+const slideTime = 2; //in seconds
 let animation;
 
 // Query DOM elements
