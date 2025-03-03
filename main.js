@@ -14,6 +14,8 @@ console.log(leftElement);
 console.log(rightElement);
 const allImages = document.querySelectorAll(".image_container");
 console.log(allImages);
+const allBullets = document.querySelectorAll(".bullet");
+console.log(allBullets);
 
 const slidesCount = allImages.length;
 console.log(slidesCount);
@@ -27,6 +29,11 @@ document.addEventListener("keydown", onKeyPress);
 //Support mobile swipe
 imgContainerElem.addEventListener("touchstart", onTouchStart);
 imgContainerElem.addEventListener("touchend", onTouchEnd);
+//Support touchpad
+imgContainerElem.addEventListener("wheel", onWheelMove);
+//Navigation button
+allBullets.forEach(bullet => bullet.addEventListener("click", onBulletClick));
+
 
 // Listeners
 //Move to left with prev bar
@@ -69,27 +76,11 @@ function onTouchStart(event) {
     console.log(startX);
 }
 
-//If swipe on mobile is long enough
-//function onTouchEnd(event) {
-//    console.log(event);
-//    let endX = event.changedTouches[0].clientX;
-//    console.log(endX);
-//
-//    let swipeThreshold = 50;
-//
-//    if (startX - endX > swipeThreshold) {
-//        onRightClick();
-//    } else if (endX - startX > swipeThreshold) {
-//        onLeftClick();
-//    }
-//}
-
+//Swipe on mobile
 function onTouchEnd(event) {
     console.log(event);
     let endX = event.changedTouches[0].clientX;
     console.log(endX);
-
-//    let swipeThreshold = 50;
 
     if (startX > endX) {
         onRightClick();
@@ -98,5 +89,30 @@ function onTouchEnd(event) {
     }
 }
 
+//Move on touchpad
+function onWheelMove(event) {
+    console.log(event);
+
+    //Introduce some threshold, otherwise uncontrollable behaviour (too "sensitive"/fast)
+    const thresholdMoveWheel = 20; //px
+
+    if (event.deltaX > thresholdMoveWheel) {
+        console.log(event.deltaX);
+        onRightClick();
+    } else if (event.deltaX < -thresholdMoveWheel) {
+        onLeftClick();
+    }
+}
+
+function  onBulletClick(event) {
+    //   console.log(event);
+
+    const index = Array.from(allBullets).indexOf(event.target);
+    if (index !== -1) {
+        //Update index of current slide
+        currentSlide = index;
+        imgContainerElem.style.transform = `translate(-${currentSlide * firstImageElem.offsetWidth}px)`;
+    }
+}
 
 
