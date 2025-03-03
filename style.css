@@ -5,7 +5,7 @@
 .container {
     display: grid;
     grid-template-columns: 10% 1fr 10%;
-    grid-template-rows: 1fr;
+    grid-template-rows: 1fr 10%;
     justify-content: center;
     align-items: center;
     position: absolute; /* Keeps it centered in the viewport */
@@ -25,7 +25,6 @@
     height: 100%;
     display: grid;
     grid-template-columns: repeat(5, 100%);
-    /* animation: slideAnimation 10s infinite; */
 }
 
 .image_container {
@@ -58,18 +57,34 @@ img {
     opacity: 1;
 }
 
-@keyframes slideAnimation {
-    0% { transform: translateX(0%); }
-    20% { transform: translateX(0%); } /* Stay on first image */
+.prev:hover, .next:hover {
+    background-color: rgb(157, 163, 163);
+}
 
-    25% { transform: translateX(-100%); }
-    45% { transform: translateX(-100%); } /* Stay on second image */
+.start_stop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #031c81;
+    cursor: pointer;
+    grid-column: 1;
+    grid-row: 2;
+}
 
-    50% { transform: translateX(-200%); }
-    70% { transform: translateX(-200%); } /* Stay on third image */
+.img_nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-family: "Arial Unicode MS", "Segoe UI Symbol", sans-serif;
+    font-weight: bold;
+    color: #031c81;
+    font-size: 24px;
+    grid-column: 2;
+    grid-row: 2;
+}
 
-    75% { transform: translateX(-300%); }
-    95% { transform: translateX(-300%); } /* Stay on fourth image */
-
-    100% { transform: translateX(-400%); } /* Last image */
+.bullet {
+    cursor: pointer;
 }
