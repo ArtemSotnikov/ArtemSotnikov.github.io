@@ -51,8 +51,8 @@ export class Slider {
 
     //Support mobile swipe
     touchSubscriptions () {
-        imgContainerElem.addEventListener("touchstart", this.onTouchStart.bind(this));
-        imgContainerElem.addEventListener("touchend", this.onTouchEnd.bind(this));
+        this.imgContainerElem.addEventListener("touchstart", this.onTouchStart.bind(this));
+        this.imgContainerElem.addEventListener("touchend", this.onTouchEnd.bind(this));
     }
 
 
