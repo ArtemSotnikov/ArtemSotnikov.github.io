@@ -2,35 +2,38 @@ export class Slider {
     //variables
     currentSlide = 0;
     startX;
-   // isOngoing = false;
-   // slideTime = 1; //in seconds
-   // animation;
+    isOngoing = false;
+    animation;
 
     //parameters
+    slideTime = 1; //in seconds
 
     constructor() {
         // Query DOM elements (when several queries are required)
         this.imgContainerElem = document.querySelector(".slider");
         this.allImages = document.querySelectorAll(".image_container");
         this.firstImageElem = document.querySelector("img");
+        this.allBullets = document.querySelectorAll(".bullet");
 
         // Check if there are images
         if (this.allImages.length === 0) {
             throw new Error('No images specified');
         } else {
             console.log(this.allImages);
+            this.slidesCount = this.allImages.length;
         }
-        this.slidesCount = this.allImages.length;
 
-
+        //Call subscription during initialization of an instance
         this.barsSubscription();
         this.keyArrowsSubscription();
         this.wheelSubscription();
         this.touchSubscriptions();
+        this.bulletsSubscription();
+        this.startStopElSubscription();
 
     }
 
-    // Events
+    // Events/subscriptions
     //On prev and next bars
     barsSubscription() {
         //Move to left with prev bar
@@ -55,7 +58,16 @@ export class Slider {
         this.imgContainerElem.addEventListener("touchend", this.onTouchEnd.bind(this));
     }
 
+    //Navigation button
+    bulletsSubscription() {
+        this.allBullets.forEach(bullet => bullet.addEventListener("click", this.onBulletClick.bind(this)));
+    }
 
+    startStopElSubscription() {
+        document.querySelector(".start_stop").addEventListener("click", this.onStartStop.bind(this));
+    }
+
+    //Listeners
     //Move to left with prev bar
     onLeftClick() {
         this.currentSlide--;
@@ -66,7 +78,7 @@ export class Slider {
 
         this.imgContainerElem.style.transform = `translate(-${this.currentSlide * this.firstImageElem.offsetWidth}px)`;
 
-    //    updateActiveBullet();
+        this.updateActiveBullet();
     }
 
     //Move to right with next bar
@@ -78,9 +90,8 @@ export class Slider {
         }
 
         this.imgContainerElem.style.transform = `translate(-${this.currentSlide * this.firstImageElem.offsetWidth}px)`;
-        this.imgContainerElem.style.transform = `translate(-${this.currentSlide * this.firstImageElem.offsetWidth}px)`;
 
-        //updateActiveBullet();
+        this.updateActiveBullet();
     }
 
     //Check left or right key press then activate functionality of respective bars
@@ -121,5 +132,36 @@ export class Slider {
         }
     }
 
+    //Scroll slides with navigation bullets
+    onBulletClick(event) {
+        const index = Array.from(this.allBullets).indexOf(event.target);
+
+        if (index !== -1) {
+            //Update index of current slide
+            this.currentSlide = index;
+            this.imgContainerElem.style.transform = `translate(-${this.currentSlide * this.firstImageElem.offsetWidth}px)`;
+        }
+
+        this.updateActiveBullet();
+    }
+
+    //Change active (by color) bullet when slide is scrolled by any method
+    updateActiveBullet() {
+        this.allBullets.forEach(bullet => { bullet.style.color = "darkblue";});
+        this.allBullets.item(this.currentSlide).style.color = "red";
+    }
+
+    //Start stop automatic scrolling of slides
+    onStartStop(event) {
+        if (!this.isOngoing) {
+            this.isOngoing = true;
+
+            this.animation = setInterval(this.onRightClick.bind(this), this.slideTime * 1000);
+        } else {
+            this.isOngoing = false;
+
+            clearInterval(this.animation);
+        }
+    }
 
 }
