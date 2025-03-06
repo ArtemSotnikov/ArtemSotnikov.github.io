@@ -4,16 +4,28 @@ export class Slider {
     startX;
     isOngoing = false;
     animation;
+    isStartedByButton = false;
 
     //parameters
     slideTime = 1; //in seconds
 
+    imageLinks = [
+        "assets/images/1.jpg",
+        "assets/images/2.jpg",
+        "assets/images/3.jpg",
+        "assets/images/4.jpg",
+        "assets/images/5.jpg"
+    ];
+
     constructor() {
+
+        this.generateImages();
+        this.generateBullets();
+
         // Query DOM elements (when several queries are required)
         this.imgContainerElem = document.querySelector(".slider");
         this.allImages = document.querySelectorAll(".image_container");
         this.firstImageElem = document.querySelector("img");
-        this.allBullets = document.querySelectorAll(".bullet");
 
         // Check if there are images
         if (this.allImages.length === 0) {
@@ -28,9 +40,8 @@ export class Slider {
         this.keyArrowsSubscription();
         this.wheelSubscription();
         this.touchSubscriptions();
-        this.bulletsSubscription();
         this.startStopElSubscription();
-
+        this.stopAnimationSubscription();
     }
 
     // Events/subscriptions
@@ -60,11 +71,17 @@ export class Slider {
 
     //Navigation button
     bulletsSubscription() {
+        this.allBullets = document.querySelectorAll(".bullet");
         this.allBullets.forEach(bullet => bullet.addEventListener("click", this.onBulletClick.bind(this)));
     }
 
     startStopElSubscription() {
         document.querySelector(".start_stop").addEventListener("click", this.onStartStop.bind(this));
+    }
+
+    stopAnimationSubscription() {
+        this.imgContainerElem.addEventListener("mousemove", this.onImageStop.bind(this));
+        this.imgContainerElem.addEventListener("mouseout", this.onImageStart.bind(this));
     }
 
     //Listeners
@@ -84,13 +101,10 @@ export class Slider {
     //Move to right with next bar
     onRightClick() {
         this.currentSlide++;
-
         if(this.currentSlide === this.slidesCount) {
             this.currentSlide = 0;
         }
-
         this.imgContainerElem.style.transform = `translate(-${this.currentSlide * this.firstImageElem.offsetWidth}px)`;
-
         this.updateActiveBullet();
     }
 
@@ -155,13 +169,51 @@ export class Slider {
     onStartStop(event) {
         if (!this.isOngoing) {
             this.isOngoing = true;
+            this.isStartedByButton = true;
 
             this.animation = setInterval(this.onRightClick.bind(this), this.slideTime * 1000);
         } else {
             this.isOngoing = false;
+            this.isStartedByButton = false;
 
             clearInterval(this.animation);
         }
     }
 
+    onImageStop(event) {
+        if (this.isOngoing && this.isStartedByButton) {
+            this.isOngoing = false;
+            clearInterval(this.animation);
+        }
+    }
+
+    onImageStart() {
+        if (!this.isOngoing && this.isStartedByButton) {
+            this.onStartStop();
+        }
+    }
+
+    //In .slider generate .image_containers with images from the given links
+    generateImages() {
+        let resultHtml = '';
+        this.imageLinks.forEach(imageLink => {
+            resultHtml += `
+                <div class="image_container">
+                    <img src="${imageLink}" alt="image">
+                </div>
+            `;
+        });
+        document.querySelector(".slider").innerHTML = resultHtml;
+    }
+
+    //In .img_nav generate .bullets and update them directly to give start colors. .
+    generateBullets() {
+        let resultHtml = '';
+        this.imageLinks.forEach((_, index) => {
+            resultHtml += `<div class="bullet">&#x25CB;</div>`;
+        })
+        document.querySelector(".img_nav").innerHTML = resultHtml;
+        this.bulletsSubscription();
+        this.updateActiveBullet();
+    }
 }
