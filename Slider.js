@@ -9,32 +9,35 @@ export class Slider {
     //parameters
     slideTime = 1; //in seconds
 
-    imageLinks = [
-        "assets/images/1.jpg",
-        "assets/images/2.jpg",
-        "assets/images/3.jpg",
-        "assets/images/4.jpg",
-        "assets/images/5.jpg"
-    ];
-
-    constructor(sliderID) {
+    constructor(sliderID,
+                imageLinks = ["assets/images/1.jpg", "assets/images/2.jpg", "assets/images/3.jpg", "assets/images/4.jpg", "assets/images/5.jpg"],
+                barsColor="dimgrey",
+                barsHoverColor = "lightgrey")
+    {
         this.containerElem = document.querySelector(`#${sliderID}`);
+        this.barsColor = barsColor;
+        this.barsHoverColor = barsHoverColor;
+
+        // Ensure imageLinks is not empty
+        if (!imageLinks || imageLinks.length === 0) {
+            throw new Error("No images provided for the slider.");
+        }
+
+        this.imageLinks = imageLinks;
 
         this.generateImages();
+    }
+
+    setupSlider() {
         this.generateBullets();
 
         // Query DOM elements (when several queries are required)
         this.imgContainerElem = this.containerElem.querySelector(".slider");
         this.allImages = this.containerElem.querySelectorAll(".image_container");
         this.firstImageElem = this.containerElem.querySelector("img");
+        this.slidesCount = this.allImages.length;
 
-        // Check if there are images
-        if (this.allImages.length === 0) {
-            throw new Error('No images specified');
-        } else {
-            console.log(this.allImages);
-            this.slidesCount = this.allImages.length;
-        }
+        this.decorateInactiveBars();
 
         //Call subscription during initialization of an instance
         this.barsSubscription();
@@ -52,6 +55,14 @@ export class Slider {
         this.containerElem.querySelector(".prev").addEventListener("click", this.onLeftClick.bind(this));
         //Move to right with next bar
         this.containerElem.querySelector(".next").addEventListener("click", this.onRightClick.bind(this));
+
+        //Change color when active
+        this.containerElem.querySelector(".prev").addEventListener("mouseover", this.onMouseoverPrev.bind(this));
+        this.containerElem.querySelector(".next").addEventListener("mouseover", this.onMouseoverNext.bind(this));
+
+        //Change back color when mouse is out
+        this.containerElem.querySelector(".prev").addEventListener("mouseout", this.onMouseoutPrev.bind(this));
+        this.containerElem.querySelector(".next").addEventListener("mouseout", this.onMouseoutNext.bind(this));
     }
 
     //On left and right arrows
@@ -109,6 +120,7 @@ export class Slider {
         this.updateActiveBullet();
     }
 
+    //TODO: extend to both slider. Dose not work.
     //Check left or right key press then activate functionality of respective bars
     onKeyPress(event) {
         if (event.key === "ArrowLeft") {
@@ -167,7 +179,7 @@ export class Slider {
     }
 
     //Start stop automatic scrolling of slides
-    onStartStop(event) {
+    onStartStop() {
         if (!this.isOngoing) {
             this.isOngoing = true;
             this.isStartedByButton = true;
@@ -181,7 +193,7 @@ export class Slider {
         }
     }
 
-    onImageStop(event) {
+    onImageStop() {
         if (this.isOngoing && this.isStartedByButton) {
             this.isOngoing = false;
             clearInterval(this.animation);
@@ -205,6 +217,11 @@ export class Slider {
             `;
         });
         this.containerElem.querySelector(".slider").innerHTML = resultHtml;
+
+    // Wait for the first image to load before initializing other elements
+    this.containerElem.querySelector("img").onload = () => {
+        this.setupSlider();
+    };
     }
 
     //In .img_nav generate .bullets and update them directly to give start colors. .
@@ -217,4 +234,27 @@ export class Slider {
         this.bulletsSubscription();
         this.updateActiveBullet();
     }
+
+    //Decorate side bars in static and with hover.
+    decorateInactiveBars() {
+        this.containerElem.querySelector(".prev").style.backgroundColor = this.barsColor;
+        this.containerElem.querySelector(".next").style.backgroundColor = this.barsColor;
+    }
+
+    onMouseoverPrev() {
+        this.containerElem.querySelector(".prev").style.backgroundColor = this.barsHoverColor;
+    }
+
+    onMouseoverNext() {
+        this.containerElem.querySelector(".next").style.backgroundColor = this.barsHoverColor;
+    }
+
+    onMouseoutPrev() {
+        this.containerElem.querySelector(".prev").style.backgroundColor = this.barsColor;
+    }
+
+    onMouseoutNext() {
+        this.containerElem.querySelector(".next").style.backgroundColor = this.barsColor;
+    }
+
 }
