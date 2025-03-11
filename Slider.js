@@ -5,15 +5,15 @@ export class Slider {
     isOngoing = false;
     animation;
     isStartedByButton = false;
-
-    //parameters
-    slideTime = 1; //in seconds
+    startStopText = 	"\u2BC8" //Start
 
     constructor(sliderID,
+                slideTime = 1,
                 imageLinks = ["assets/images/1.jpg", "assets/images/2.jpg", "assets/images/3.jpg", "assets/images/4.jpg", "assets/images/5.jpg"],
                 barsColor="dimgrey",
                 barsHoverColor = "lightgrey")
     {
+        this.slideTime = slideTime;
         this.containerElem = document.querySelector(`#${sliderID}`);
         this.barsColor = barsColor;
         this.barsHoverColor = barsHoverColor;
@@ -120,7 +120,7 @@ export class Slider {
         this.updateActiveBullet();
     }
 
-    //TODO: extend to both slider. Dose not work.
+    //TODO: extend to both sliders. Dose not work.
     //Check left or right key press then activate functionality of respective bars
     onKeyPress(event) {
         if (event.key === "ArrowLeft") {
@@ -185,12 +185,15 @@ export class Slider {
             this.isStartedByButton = true;
 
             this.animation = setInterval(this.onRightClick.bind(this), this.slideTime * 1000);
+            this.switchStartStop();
         } else {
             this.isOngoing = false;
             this.isStartedByButton = false;
 
             clearInterval(this.animation);
+            this.switchStartStop();
         }
+        //this.switchStartStop();
     }
 
     onImageStop() {
@@ -235,7 +238,7 @@ export class Slider {
         this.updateActiveBullet();
     }
 
-    //Decorate side bars in static and with hover.
+    //Decorate sidebars in static and with hover.
     decorateInactiveBars() {
         this.containerElem.querySelector(".prev").style.backgroundColor = this.barsColor;
         this.containerElem.querySelector(".next").style.backgroundColor = this.barsColor;
@@ -255,6 +258,11 @@ export class Slider {
 
     onMouseoutNext() {
         this.containerElem.querySelector(".next").style.backgroundColor = this.barsColor;
+    }
+
+    switchStartStop() {
+        this.startStopText = (this.startStopText === "\u2BC8") ? "\u23F9" : "\u2BC8";
+        this.containerElem.querySelector(".start_stop").innerText = this.startStopText;
     }
 
 }
