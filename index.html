@@ -2,53 +2,31 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Simple Slider</title>
+	<title>AJAX</title>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="assets/styles/normalize.css">
-	<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="sliders_container">
-	<div class="container" id="orig_slider" tabindex="0">
-		<div class="prev">
-			&#10094;
-		</div>
+<form id="weatherInputForm" method="get" action="">
+	<label>Search weather for city:
+		<input id="searchCity" name="searchText" type="text" placeholder="Type city here...">
+		<button id="weatherButton">Weather</button>
+	</label>
+</form>
 
-		<div class="slider"></div>
-
-		<div class="next">
-			&#10095;
-		</div>
-
-		<div class="start_stop">
-			&#x2BC8;
-		</div>
-
-		<div class="img_nav"></div>
-	</div>
-
-	<div class="container" id="dupl_slider" tabindex="0">
-		<div class="prev">
-			&#10094;
-		</div>
-
-		<div class="slider"></div>
-
-		<div class="next">
-			&#10095;
-		</div>
-
-		<div class="start_stop">
-			&#x2BC8;
-		</div>
-
-		<div class="img_nav"></div>
-	</div>
+<div class="city_weather_container">
+	<div>Weather link:<span id="link"></span></div>
+	<div>Ambient temperature:<span id="temp"></span></div>
+	<div>Atmospheric pressure:<span id="pressure"></span></div>
+	<div>Description:<span id="description"></span></div>
+	<div>Air humidity:<span id="humidity"></span></div>
+	<div>Wind speed:<span id="speed"></span></div>
+	<div>Wind direction:<span id="deg"></span></div>
 </div>
 
-<script type="module" src="main.js"></script>
+<script type="module" src="script.js">
+</script>
 
 </body>
 </html>
