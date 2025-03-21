@@ -36,7 +36,7 @@ document.getElementById("searchCity").addEventListener("input", event => {
 function getWeatherAPIForCity () {
     console.log("city:", city);
 
-    let weatherAPI = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=5d066958a60d315387d9492393935c19`;
+    let weatherAPI = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=5d066958a60d315387d9492393935c19`;
 
     if (city === '') {
         alert('Please enter a city name.');
@@ -76,7 +76,7 @@ async function getWeatherByCity () {
 //        .catch(error => console.error("Error:", "There is no such icon"));
 //}
 function setIcon(iconID) {
-    const iconURL = `http://openweathermap.org/img/w/${iconID}.png`;
+    const iconURL = `https://openweathermap.org/img/w/${iconID}.png`;
     document.getElementById("weatherIcon").src = iconURL;
    // document.getElementById("weatherIcon").classList.remove("hidden"); // Show icon
 }
