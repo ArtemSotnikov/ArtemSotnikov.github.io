@@ -26,24 +26,38 @@ document.getElementById("weatherButton").addEventListener("click", event => {
             getWeatherByCity();
     });
 
-// Listener on input field to get city name from input.
-document.getElementById("searchCity").addEventListener("input", event => {
+// Listener on input field to get city name from input. With debounce of 1 sek to reduce calls on input of city name.
+document.getElementById("searchCity").addEventListener("input", debounce(onCityInput, 1000));
+
+function onCityInput (event) {
     city = event.target.value;
-    console.log("I am here");
-});
+}
+
+// Debounce from lesson 32
+function debounce(callback, wait) {
+    let timer;
+    return function(...args) {
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(() => {
+            clearTimeout(timer);
+            callback(...args);
+        }, wait);
+    }
+}
 
 // Put name of the city in the api link.
 function getWeatherAPIForCity () {
     console.log("city:", city);
 
-    let weatherAPI = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=5d066958a60d315387d9492393935c19`;
+    let weatherAPI = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=5d066958a60d315387d9492393935c19`;
 
     if (city === '') {
         alert('Please enter a city name.');
         return;
     }
-
-    document.getElementById("link").innerHTML = weatherAPI;
 
     return weatherAPI;
 }
@@ -64,40 +78,40 @@ async function getWeatherByCity () {
     setWeatherValues(weatherData);
 }
 
-//async function getIcon (iconID) {
-//    const linkIcon = `http://openweathermap.org/img/w/${iconID}.png`;
-//    const iconPicture = await fetch(linkIcon)
-//        .then(response => {
-//            if (!response.ok) {
-//                throw new Error("Failed to fetch icon");
-//            }
-//            return response;
-//        })
-//        .catch(error => console.error("Error:", "There is no such icon"));
-//}
-function setIcon(iconID) {
-    const iconURL = `https://openweathermap.org/img/w/${iconID}.png`;
-    document.getElementById("weatherIcon").src = iconURL;
-   // document.getElementById("weatherIcon").classList.remove("hidden"); // Show icon
+// Set values from API visible on web page
+function setValueVisible()   {
+    document.getElementById("temp").classList.remove("hidden");
+    document.getElementById("pressure").classList.remove("hidden");
+    document.getElementById("description").classList.remove("hidden");
+    document.getElementById("humidity").classList.remove("hidden");
+    document.getElementById("speed").classList.remove("hidden");
+    document.getElementById("deg").classList.remove("hidden");
+    document.getElementById("icon").classList.remove("hidden");
+}
+
+// Remove values from the web page
+function setValueHidden()   {
+    document.getElementById("temp").classList.add("hidden");
+    document.getElementById("pressure").classList.add("hidden");
+    document.getElementById("description").classList.add("hidden");
+    document.getElementById("humidity").classList.add("hidden");
+    document.getElementById("speed").classList.add("hidden");
+    document.getElementById("deg").classList.add("hidden");
+    document.getElementById("icon").classList.add("hidden");
 }
 
 function setWeatherValues(weatherData) {
     if (weatherData !== undefined) {
-        console.log(weatherData);
+        setValueVisible();
         document.getElementById("temp").innerHTML = weatherData.main.temp;
         document.getElementById("pressure").innerHTML = weatherData.main.pressure;
         document.getElementById("description").innerHTML = weatherData.weather[0].description;
         document.getElementById("humidity").innerHTML = weatherData.main.temp;
         document.getElementById("speed").innerHTML = weatherData.wind.speed;
         document.getElementById("deg").innerHTML = weatherData.wind.deg;
-        setIcon(weatherData.weather[0].icon);
-    } else {
-        document.getElementById("temp").classList.add("hidden");
-        document.getElementById("pressure").classList.add("hidden");
-        document.getElementById("description").classList.add("hidden");
-        document.getElementById("humidity").classList.add("hidden");
-        document.getElementById("speed").classList.add("hidden");
-        document.getElementById("deg").classList.add("hidden");
+        document.getElementById("icon").src = `http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`;
+    } else { // If input has a wrong city
+        setValueHidden();
     }
 }
 
