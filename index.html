@@ -1,34 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>AJAX</title>
-
+  <meta charset="UTF-8">
+  <title>Movie Search</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<form id="weatherInputForm" method="get" action="">
-	<label>Search weather for city:
-		<input id="searchCity" name="searchText" type="text" placeholder="Type city here...">
-		<button id="weatherButton">Weather</button>
-	</label>
-</form>
+<div class="container_search_movie" id="search_movie">
+  <form id="movieForm" method="get" action="">
+    <label>Search movie:
+      <input id="searchText" name="searchText" type="text" placeholder="Start typing to search...">
+    </label>
+  </form>
 
-<div class="city_weather_container">
-	<div>Ambient temperature:<span id="temp"></span></div>
-	<div>Atmospheric pressure:<span id="pressure"></span></div>
-	<div>Description:<span id="description"></span></div>
-	<div>Air humidity:<span id="humidity"></span></div>
-	<div>Wind speed:<span id="speed"></span></div>
-	<div>Wind direction:<span id="deg"></span></div>
-	<div class="image_container">
-		<img id="icon" src="" alt="icon weather">
-	</div>
+  <div id="errorContainer"></div>
+  <div id="movieContainer"></div>
 </div>
 
-<script type="module" src="script.js">
-</script>
-
+<script type="module" src="script.js"></script>
 </body>
 </html>
